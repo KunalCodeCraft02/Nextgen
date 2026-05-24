@@ -1,0 +1,36 @@
+{
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.3",
+    "compression": "^1.8.1",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^17.4.2",
+    "ejs": "^5.0.2",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.5.2",
+    "helmet": "^8.2.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.6.2",
+    "mongose": "^0.0.2-security"
+  },
+  "name": "nextgen-innovators",
+  "version": "1.0.0",
+  "description": "��#\u0000 \u0000N\u0000e\u0000x\u0000t\u0000g\u0000e\u0000n\u0000\r\u0000 \u0000",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KunalCodeCraft02/Nextgen.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/KunalCodeCraft02/Nextgen/issues"
+  },
+  "homepage": "https://github.com/KunalCodeCraft02/Nextgen#readme"
+}
