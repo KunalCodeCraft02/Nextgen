@@ -25,7 +25,7 @@ const validatePassword = (password) => {
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use('/characters', express.static(path.join(__dirname, 'public', 'characters')));
 app.set("view engine", "ejs");
 const auth = require("./middleware/auth");
 console.log("ENV CHECK:");
