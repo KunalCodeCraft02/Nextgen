@@ -23,6 +23,11 @@ const studentSchema =
             trim: true
         },
 
+        name: {
+            type: String,
+            trim: true
+        },
+
         dob: {
             type: Date,
             required: true
@@ -81,7 +86,7 @@ const studentSchema =
             required: true
         },
 
-       
+
         currentClass: {
             type: String,
             required: true
@@ -111,7 +116,7 @@ const studentSchema =
 
         /* PARENT DETAILS */
 
-       
+
 
 
 
@@ -162,7 +167,30 @@ const studentSchema =
             type: Date
         },
 
+        isLeader: {
+            type: Boolean,
+            default: false
+        },
 
+        leaderEmail: {
+            type: String,
+            default: null
+        },
+
+        members: {
+            type: [String],
+            default: []
+        },
+
+        isMember: {
+            type: Boolean,
+            default: false
+        },
+
+        memberRole: {
+            type: String,
+            default: null
+        },
 
         /* SYSTEM */
 

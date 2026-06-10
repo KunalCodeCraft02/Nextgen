@@ -327,6 +327,38 @@
             display: block;
         }
 
+        .nav-add-member {
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--green) !important;
+            background: rgba(107, 191, 122, 0.15);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(107, 191, 122, 0.4);
+            transition: all 0.25s ease !important;
+        }
+
+        .nav-add-member:hover {
+            background: rgba(107, 191, 122, 0.25) !important;
+            border-color: var(--green) !important;
+            color: white !important;
+            transform: translateY(-2px);
+        }
+
+        .nav-add-member::after {
+            display: none !important;
+        }
+
+        .nav-logout-link {
+            color: rgba(255, 255, 255, 0.5) !important;
+        }
+
+        .nav-logout-link:hover {
+            color: var(--orange) !important;
+        }
+
         .mobile-menu a:hover {
             color: white;
             background: rgba(var(--hero-accent-rgb), 0.16);
@@ -1511,6 +1543,27 @@
                 <li><a href="#mission">Mission</a></li>
                 <li><a href="#roadmap">Roadmap</a></li>
                 <li><a href="#phases">Phases</a></li>
+                <li>
+
+                    <% if(members===0){ %>
+
+                        <a href="/addmember" class="nav-add-member" >
+
+                            Add Member
+
+                        </a>
+
+                        <% } else { %>
+
+                            <a href="/team" >
+
+                                Team
+
+                            </a>
+
+                            <% } %>
+
+                </li>
                 <li><a href="#impact">Impact</a></li>
             </ul>
 
@@ -1530,6 +1583,11 @@
         <a href="#roadmap" onclick="toggleMobile(false)">Roadmap</a>
         <a href="#phases" onclick="toggleMobile(false)">Phases</a>
         <a href="#impact" onclick="toggleMobile(false)">Impact</a>
+        <% if(members===0){ %>
+                <a href="/addmember" onclick="toggleMobile(false)" class="nav-add-member">Add Member</a>
+                <% } else { %>
+                <a href="/team" onclick="toggleMobile(false)" class="nav-add-member">Team</a>
+                <% } %>
         <a href="/logout" onclick="toggleMobile(false)">Logout</a>
     </div>
 

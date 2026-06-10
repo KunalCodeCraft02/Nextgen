@@ -112,9 +112,46 @@ app.get("/", (req, res) => {
     res.render("index");
 });
 
-app.get("/home", auth, (req, res) => {
-    res.render("home");
-});
+app.get(
+
+    "/home",
+
+    auth,
+
+    async (req, res) => {
+
+        const user =
+
+            await Student.findById(
+                req.user.id
+            );
+
+        const members =
+
+            await Student.countDocuments({
+
+                leaderEmail:
+                    user.studentEmail,
+
+                isMember: true
+
+            });
+
+        res.render(
+
+            "home",
+
+            {
+
+                user,
+
+                members
+
+            }
+
+        );
+
+    });
 
 app.get("/signinas", (req, res) => {
     res.render("signinas");
@@ -131,11 +168,73 @@ app.get("/schoologin", (req, res) => {
 app.get("/studentsignup", (req, res) => {
     res.render("studentsignup");
 });
-
 app.get("/studentlogin", (req, res) => {
     res.render("studentlogin");
 });
 
+app.get(
+
+    "/team",
+
+    auth,
+
+    async (req, res) => {
+
+        const user =
+
+            await Student.findById(
+                req.user.id
+            );
+
+        const members =
+
+            await Student.find({
+
+                leaderEmail:
+                    user.studentEmail,
+
+                isMember: true
+
+            });
+
+        res.render(
+
+            "team",
+
+            {
+                members,
+                user
+            }
+
+        );
+
+    });
+
+app.get(
+
+    "/addmember",
+
+    auth,
+
+    async (req, res) => {
+
+        const user =
+
+            await Student.findById(
+                req.user.id
+            );
+
+        res.render(
+
+            "addmember",
+
+            {
+                user
+            }
+
+        );
+
+    });
 
 
 
@@ -582,11 +681,12 @@ app.post(
 
 
             /* CHECK STUDENT */
+            const normalizedStudentEmail = studentEmail.toLowerCase().trim();
 
             const existingStudent =
                 await Student.findOne({
 
-                    studentEmail
+                    studentEmail: normalizedStudentEmail
 
                 });
 
@@ -636,8 +736,6 @@ app.post(
 
                     schoolName,
 
-
-
                     currentClass,
 
                     division,
@@ -648,18 +746,17 @@ app.post(
 
                     state,
 
-
-
-
-
-
-
                     interestArea,
 
                     motivation,
 
                     password:
-                        hashedPassword
+                        hashedPassword,
+
+                    isLeader: true,
+
+                    leaderEmail:
+                        studentEmail
 
                 });
 
@@ -860,6 +957,92 @@ app.post(
 
     }
 );
+
+
+
+
+
+
+
+app.post(
+    "/addmember",
+    auth,
+    async (req, res) => {
+        try {
+            const {
+                leaderEmail,
+                name,
+                studentEmail,
+                role
+            } = req.body;
+            // Prevent leader from adding themselves as a member
+            if (leaderEmail === studentEmail) {
+                return res.json({
+                    success: false,
+                    message: "You cannot add yourself as a member"
+                });
+            }
+            const normalizedStudentEmail = studentEmail.toLowerCase().trim();
+            let student =
+                await Student.findOne({
+                    studentEmail: normalizedStudentEmail
+                });
+            // If student doesn't exist, create a new one with minimal info
+            if (!student) {
+                // Generate placeholder values for required fields
+                const nameParts = name.trim().split(' ');
+                const placeholderFirstName = nameParts[0] || 'Student';
+                const placeholderLastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : 'Member';
+
+                student = await Student.create({
+                    firstName: placeholderFirstName,
+                    lastName: placeholderLastName,
+                    dob: new Date('2000-01-01'), // Placeholder DOB
+                    gender: 'Other', // Placeholder gender
+                    studentEmail: normalizedStudentEmail,
+                    studentPhone: '0000000000', // Placeholder phone
+                    schoolName: 'Unknown School', // Placeholder school
+                    currentClass: 'Unknown', // Placeholder class
+                    division: '',
+                    rollNumber: '',
+                    city: 'Unknown', // Placeholder city
+                    state: 'Unknown', // Placeholder state
+                    password: await bcrypt.hash('TempPass123!', 10), // Placeholder password
+                    name: name
+                });
+            }
+            // Find the leader
+            const leader =
+                await Student.findOne({
+                    studentEmail: leaderEmail
+                });
+            if (!leader) {
+                return res.json({
+                    success: false,
+                    message: "Leader not found"
+                });
+            }
+            student.isMember = true;
+            student.memberRole = role;
+            student.leaderEmail = leaderEmail;
+            student.name = name;
+            student.joinedAsMemberAt = new Date();
+            // Add the student to the leader's members list
+            leader.members.push(studentEmail);
+            await student.save();
+            await leader.save();
+            return res.json({
+                success: true
+            });
+        }
+        catch (err) {
+            console.log(err);
+            return res.status(500).json({
+                success: false,
+                message: "Server Error"
+            });
+        }
+    });
 
 
 
