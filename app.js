@@ -8,6 +8,8 @@ require("dotenv").config();
 const db = require("./config/database");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { Resend } = require('resend');
+const resend = new Resend(process.env.RESEND_API_KEY);
 const School = require("./models/School")
 const Student = require("./models/Student")
 
@@ -170,6 +172,20 @@ app.get("/studentsignup", (req, res) => {
 });
 app.get("/studentlogin", (req, res) => {
     res.render("studentlogin");
+});
+app.get("/verify-otp", (req, res) => {
+    const type = req.query.type; // "student" or "school"
+
+    const email =
+        type === "student"
+            ? req.cookies.pendingStudentEmail
+            : req.cookies.pendingSchoolEmail;
+
+    if (!email) {
+        return res.redirect("/"); // session expired or invalid
+    }
+
+    res.render("verifyotp", { type, email });
 });
 
 app.get(
@@ -398,55 +414,44 @@ app.post(
                 });
 
             console.log(school)
+            // After School.create(...)
+
+            /* GENERATE OTP */
+            const otp = Math.floor(100000 + Math.random() * 900000).toString();
+            const otpExpires = new Date(Date.now() + 10 * 60 * 1000);
+
+            school.otp = otp;
+            school.otpExpires = otpExpires;
+            await school.save();
+
+            /* SEND OTP EMAIL */
+            await resend.emails.send({
+                from: 'NextGen Innovators <noreply@bemybot.in>', // change to your verified domain
+                to: officialEmail,
+                subject: 'Verify Your School Email - NextGen Innovators',
+                html: `
+        <div style="font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto;">
+            <h2 style="color: #1a1a2e;">School Email Verification</h2>
+            <p>Hi ${teacherName},</p>
+            <p>Your OTP for <strong>${schoolName}</strong> registration is:</p>
+            <div style="background: #f0f0f0; padding: 20px; text-align: center; border-radius: 8px; margin: 20px 0;">
+                <h1 style="color: #e94560; letter-spacing: 8px; margin: 0;">${otp}</h1>
+            </div>
+            <p>This OTP is valid for <strong>10 minutes</strong>.</p>
+            <p>If you did not register, please ignore this email.</p>
+        </div>
+    `
+            });
+
+            /* STORE PENDING SESSION */
+            res.cookie("pendingSchoolEmail", officialEmail, {
+                httpOnly: true,
+                maxAge: 10 * 60 * 1000
+            });
+
+            return res.redirect("/verify-otp?type=school");
 
 
-
-            /* JWT TOKEN */
-
-            const token =
-                jwt.sign(
-
-                    {
-
-                        id:
-                            school._id,
-
-                        email:
-                            school.officialEmail,
-
-                        schoolName:
-                            school.schoolName
-
-                    },
-
-                    process.env.JWT_SECRET,
-
-                    {
-                        expiresIn: "7d"
-                    }
-
-                );
-
-
-
-            /* STORE COOKIE */
-
-            res.cookie(
-
-                "schoolToken",
-
-                token,
-
-                {
-
-                    httpOnly: true,
-
-                    maxAge:
-                        7 * 24 * 60 * 60 * 1000
-
-                }
-
-            );
 
 
 
@@ -470,7 +475,201 @@ app.post(
 
     }
 );
+app.post("/verify-otp", async (req, res) => {
+    try {
+        const { otp, type } = req.body;
 
+        const email =
+            type === "student"
+                ? req.cookies.pendingStudentEmail
+                : req.cookies.pendingSchoolEmail;
+
+        if (!email) {
+            return res.send("Session expired. Please register again.");
+        }
+
+        if (type === "student") {
+
+            const student = await Student.findOne({ studentEmail: email });
+
+            if (!student) return res.send("Student not found.");
+
+            if (student.otp !== otp) {
+                return res.render("verifyotp", {
+                    type,
+                    email,
+                    error: "Invalid OTP. Please try again."
+                });
+            }
+
+            if (student.otpExpires < new Date()) {
+                return res.render("verifyotp", {
+                    type,
+                    email,
+                    error: "OTP has expired. Please request a new one."
+                });
+            }
+
+            /* CLEAR OTP + ACTIVATE */
+            student.otp = null;
+            student.otpExpires = null;
+            student.studentStatus = "Active";
+            await student.save();
+
+            /* CLEAR PENDING COOKIE */
+            res.clearCookie("pendingStudentEmail");
+
+            /* ISSUE JWT */
+            const token = jwt.sign(
+                {
+                    id: student._id,
+                    email: student.studentEmail,
+                    name: student.firstName
+                },
+                process.env.JWT_SECRET,
+                { expiresIn: "7d" }
+            );
+
+            res.cookie("studentToken", token, {
+                httpOnly: true,
+                maxAge: 7 * 24 * 60 * 60 * 1000
+            });
+
+            return res.redirect("/home");
+
+        } else if (type === "school") {
+
+            const school = await School.findOne({ officialEmail: email });
+
+            if (!school) return res.send("School not found.");
+
+            if (school.otp !== otp) {
+                return res.render("verifyotp", {
+                    type,
+                    email,
+                    error: "Invalid OTP. Please try again."
+                });
+            }
+
+            if (school.otpExpires < new Date()) {
+                return res.render("verifyotp", {
+                    type,
+                    email,
+                    error: "OTP has expired. Please request a new one."
+                });
+            }
+
+            /* CLEAR OTP + ACTIVATE */
+            school.otp = null;
+            school.otpExpires = null;
+            school.status = "Active";
+            await school.save();
+
+            /* CLEAR PENDING COOKIE */
+            res.clearCookie("pendingSchoolEmail");
+
+            /* ISSUE JWT */
+            const token = jwt.sign(
+                {
+                    id: school._id,
+                    email: school.officialEmail,
+                    schoolName: school.schoolName
+                },
+                process.env.JWT_SECRET,
+                { expiresIn: "7d" }
+            );
+
+            res.cookie("schoolToken", token, {
+                httpOnly: true,
+                maxAge: 7 * 24 * 60 * 60 * 1000
+            });
+
+            return res.redirect("/home");
+        }
+
+        return res.send("Invalid request.");
+
+    } catch (err) {
+        console.log(err);
+        return res.status(500).send("Server Error");
+    }
+});
+
+
+app.post("/resend-otp", async (req, res) => {
+    try {
+        const { type } = req.body;
+
+        const email =
+            type === "student"
+                ? req.cookies.pendingStudentEmail
+                : req.cookies.pendingSchoolEmail;
+
+        if (!email) {
+            return res.json({ success: false, message: "Session expired. Please register again." });
+        }
+
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        const otpExpires = new Date(Date.now() + 10 * 60 * 1000);
+
+        if (type === "student") {
+
+            const student = await Student.findOne({ studentEmail: email });
+            if (!student) return res.json({ success: false, message: "Student not found." });
+
+            student.otp = otp;
+            student.otpExpires = otpExpires;
+            await student.save();
+
+            await resend.emails.send({
+                from: 'NextGen Innovators <noreply@bemybot.in>',
+                to: email,
+                subject: 'Your New OTP - NextGen Innovators',
+                html: `
+                    <div style="font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto;">
+                        <h2>New OTP Request</h2>
+                        <p>Your new OTP is:</p>
+                        <div style="background: #f0f0f0; padding: 20px; text-align: center; border-radius: 8px;">
+                            <h1 style="color: #e94560; letter-spacing: 8px; margin: 0;">${otp}</h1>
+                        </div>
+                        <p>Valid for <strong>10 minutes</strong>.</p>
+                    </div>
+                `
+            });
+
+        } else {
+
+            const school = await School.findOne({ officialEmail: email });
+            if (!school) return res.json({ success: false, message: "School not found." });
+
+            school.otp = otp;
+            school.otpExpires = otpExpires;
+            await school.save();
+
+            await resend.emails.send({
+                from: 'NextGen Innovators <noreply@bemybot.in>',
+                to: email,
+                subject: 'Your New OTP - NextGen Innovators',
+                html: `
+                    <div style="font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto;">
+                        <h2>New OTP Request</h2>
+                        <p>Your new OTP is:</p>
+                        <div style="background: #f0f0f0; padding: 20px; text-align: center; border-radius: 8px;">
+                            <h1 style="color: #e94560; letter-spacing: 8px; margin: 0;">${otp}</h1>
+                        </div>
+                        <p>Valid for <strong>10 minutes</strong>.</p>
+                    </div>
+                `
+            });
+        }
+
+        return res.json({ success: true, message: "OTP resent successfully." });
+
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({ success: false, message: "Server Error" });
+    }
+});
 
 
 
@@ -761,58 +960,44 @@ app.post(
                 });
 
             console.log(student)
+            // After Student.create(...)
+
+            /* GENERATE OTP */
+            const otp = Math.floor(100000 + Math.random() * 900000).toString();
+            const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+            student.otp = otp;
+            student.otpExpires = otpExpires;
+            await student.save();
+
+            /* SEND OTP EMAIL */
+            await resend.emails.send({
+                from: 'NextGen Innovators <noreply@bemybot.in>', // change to your verified domain
+                to: studentEmail,
+                subject: 'Verify Your Email - NextGen Innovators',
+                html: `
+        <div style="font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto;">
+            <h2 style="color: #1a1a2e;">Email Verification</h2>
+            <p>Hi ${firstName},</p>
+            <p>Your OTP for NextGen Innovators registration is:</p>
+            <div style="background: #f0f0f0; padding: 20px; text-align: center; border-radius: 8px; margin: 20px 0;">
+                <h1 style="color: #e94560; letter-spacing: 8px; margin: 0;">${otp}</h1>
+            </div>
+            <p>This OTP is valid for <strong>10 minutes</strong>.</p>
+            <p>If you did not register, please ignore this email.</p>
+        </div>
+    `
+            });
+
+            /* STORE PENDING SESSION */
+            res.cookie("pendingStudentEmail", studentEmail, {
+                httpOnly: true,
+                maxAge: 10 * 60 * 1000 // 10 minutes
+            });
+
+            return res.redirect("/verify-otp?type=student");
 
 
-
-            /* JWT */
-
-            const token =
-                jwt.sign(
-
-                    {
-
-                        id:
-                            student._id,
-
-                        email:
-                            student.studentEmail,
-
-                        name:
-                            student.firstName
-
-                    },
-
-                    process.env.JWT_SECRET,
-
-                    {
-
-                        expiresIn:
-                            "7d"
-
-                    }
-
-                );
-
-
-
-            /* COOKIE */
-
-            res.cookie(
-
-                "studentToken",
-
-                token,
-
-                {
-
-                    httpOnly: true,
-
-                    maxAge:
-                        7 * 24 * 60 * 60 * 1000
-
-                }
-
-            );
 
 
 

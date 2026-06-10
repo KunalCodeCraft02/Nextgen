@@ -155,7 +155,19 @@ const studentSchema =
                 "Pending"
             ],
 
-            default: "Active"
+            default: "Pending"
+        },
+
+        /* OTP VERIFICATION */
+
+        otp: {
+            type: String,
+            default: null
+        },
+
+        otpExpires: {
+            type: Date,
+            default: null
         },
 
         rememberMe: {
