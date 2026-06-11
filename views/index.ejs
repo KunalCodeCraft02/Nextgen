@@ -8,7 +8,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap"
         rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.9.0/fonts/remixicon.css" rel="stylesheet" />
 
@@ -32,6 +32,9 @@
             --green: #6BBF7A;
             --pink: #E882B4;
             --blue: #6EB5FF;
+            --purple: #A78BFA;
+            --teal: #5EEAD4;
+            --yellow: #FBBF24;
             --orange-l: #F79B7F;
             --green-l: #85CC92;
             --pink-l: #ED9DC4;
@@ -41,7 +44,7 @@
             --card-bg: rgba(255, 255, 255, 0.055);
             --border: rgba(255, 255, 255, 0.13);
             --text: rgba(255, 255, 255, 0.92);
-            --muted: rgba(255, 255, 255, 0.55);
+            --muted: rgba(255, 255, 255, 0.62);
             --nav-height: 72px;
             --hero-accent: #F4845F;
             --hero-accent-rgb: 244, 132, 95;
@@ -53,7 +56,8 @@
             color: var(--text);
             width: 100%;
             overflow-x: hidden;
-            -webkit-font-smoothing: antialiased
+            -webkit-font-smoothing: antialiased;
+            font-weight: 400;
         }
 
         body.menu-open {
@@ -404,9 +408,10 @@
 
         .hero-info-desc {
             color: white;
-            opacity: .85;
+            opacity: .9;
             line-height: 1.7;
-            font-size: 13px;
+            font-size: 14px;
+            font-weight: 500;
             margin-bottom: 22px
         }
 
@@ -546,7 +551,8 @@
             color: var(--muted);
             max-width: 600px;
             margin: 0 auto;
-            line-height: 1.8
+            line-height: 1.8;
+            font-weight: 400
         }
 
         #vision .eyebrow,
@@ -741,13 +747,15 @@
             font-size: 1.15rem;
             letter-spacing: .02em;
             color: white;
-            margin-bottom: .8rem
+            margin-bottom: .8rem;
+            font-weight: 300;
         }
 
         .vision-card p {
             font-size: .95rem;
             color: var(--muted);
-            line-height: 1.8
+            line-height: 1.8;
+            font-weight: 400
         }
 
         /* MISSION */
@@ -770,7 +778,8 @@
             font-size: 1rem;
             color: var(--muted);
             line-height: 1.9;
-            margin-bottom: 1rem
+            margin-bottom: 1rem;
+            font-weight: 400
         }
 
         .mission-pillars {
@@ -805,7 +814,7 @@
         }
 
         .pillar-body h4 {
-            font-size: .85rem;
+            font-size: .88rem;
             font-weight: 700;
             color: var(--green-l);
             margin-bottom: .3rem;
@@ -815,7 +824,8 @@
         .pillar-body p {
             font-size: .9rem;
             color: var(--muted);
-            line-height: 1.6
+            line-height: 1.6;
+            font-weight: 400
         }
 
         .mission-visual {
@@ -846,170 +856,266 @@
             object-fit: contain
         }
 
-        /* ROADMAP */
+        /* ═══════════════════════════════════════════════
+           HORIZONTAL ROADMAP
+        ═══════════════════════════════════════════════ */
         #roadmap {
             padding: 7rem 0
         }
 
-        .timeline {
+        .h-timeline-wrap {
+            overflow-x: auto;
+            overflow-y: visible;
+            padding-bottom: 2rem;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, .15) transparent;
+            /* extra top padding so cards don't clip */
+            padding-top: 1rem;
+        }
+
+        .h-timeline-wrap::-webkit-scrollbar {
+            height: 4px
+        }
+
+        .h-timeline-wrap::-webkit-scrollbar-track {
+            background: transparent
+        }
+
+        .h-timeline-wrap::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, .18);
+            border-radius: 2px
+        }
+
+        .h-timeline {
+            display: grid;
+            grid-template-columns: repeat(7, minmax(160px, 1fr));
+            min-width: 1100px;
             position: relative;
-            max-width: 900px;
-            margin: 0 auto
+            column-gap: 0;
         }
 
-        .timeline-spine {
+        /* The horizontal line sits below cards */
+        .h-timeline::after {
+            content: '';
             position: absolute;
-            left: 50%;
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            transform: translateX(-50%);
-            background: linear-gradient(180deg, transparent, var(--pink) 10%, var(--pink-l) 50%, var(--pink) 90%, transparent)
+            left: 0;
+            right: 0;
+            top: calc(var(--card-height, 275px) + 24px);
+            height: 3px;
+            background: linear-gradient(90deg,
+                    #7C3AED 0%,
+                    #2DD4BF 16.66%,
+                    #22C55E 33.33%,
+                    #EAB308 50%,
+                    #F97316 66.66%,
+                    #EC4899 83.33%,
+                    #A78BFA 100%);
+            border-radius: 3px;
+            z-index: 1;
         }
 
-        .timeline-item {
+        .h-stop {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            margin-bottom: 3.5rem;
-            position: relative
+            position: relative;
+            z-index: 2;
         }
 
-        .timeline-item:nth-child(odd) {
-            flex-direction: row-reverse
+        /* Card (above line) */
+        .h-card {
+            background: rgba(255, 255, 255, .06);
+            border: 1px solid rgba(255, 255, 255, .14);
+            border-radius: 14px;
+            padding: 1.2rem 1rem;
+            width: 100%;
+            position: relative;
+            transition: transform .3s, border-color .3s, box-shadow .3s;
+            min-height: 200px;
         }
 
-        .timeline-node {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 48px;
-            height: 48px;
+        .h-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, .4);
+            border-color: rgba(255, 255, 255, .28);
+        }
+
+        /* Colored top accent per stop */
+        .h-stop:nth-child(1) .h-card {
+            border-top: 3px solid #7C3AED
+        }
+
+        .h-stop:nth-child(2) .h-card {
+            border-top: 3px solid #2DD4BF
+        }
+
+        .h-stop:nth-child(3) .h-card {
+            border-top: 3px solid #22C55E
+        }
+
+        .h-stop:nth-child(4) .h-card {
+            border-top: 3px solid #EAB308
+        }
+
+        .h-stop:nth-child(5) .h-card {
+            border-top: 3px solid #F97316
+        }
+
+        .h-stop:nth-child(6) .h-card {
+            border-top: 3px solid #EC4899
+        }
+
+        .h-stop:nth-child(7) .h-card {
+            border-top: 3px solid #A78BFA
+        }
+
+        .h-card-title {
+            font-family: 'Anton', sans-serif;
+            font-size: .95rem;
+            letter-spacing: .03em;
+            color: #fff;
+            margin-bottom: .55rem;
+            line-height: 1.2;
+        }
+
+        .h-card-desc {
+            font-size: .78rem;
+            color: var(--muted);
+            line-height: 1.65;
+            font-weight: 400;
+        }
+
+        /* Connector stem: card → dot */
+        .h-stem {
+            width: 2px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        .h-stop:nth-child(1) .h-stem {
+            background: #7C3AED
+        }
+
+        .h-stop:nth-child(2) .h-stem {
+            background: #2DD4BF
+        }
+
+        .h-stop:nth-child(3) .h-stem {
+            background: #22C55E
+        }
+
+        .h-stop:nth-child(4) .h-stem {
+            background: #EAB308
+        }
+
+        .h-stop:nth-child(5) .h-stem {
+            background: #F97316
+        }
+
+        .h-stop:nth-child(6) .h-stem {
+            background: #EC4899
+        }
+
+        .h-stop:nth-child(7) .h-stem {
+            background: #A78BFA
+        }
+
+        /* Dot on line */
+        .h-dot {
+            width: 16px;
+            height: 16px;
             border-radius: 50%;
-            z-index: 5;
-            background: linear-gradient(135deg, var(--pink), var(--pink-l));
-            display: flex;
+            border: 3px solid var(--dark);
+            flex-shrink: 0;
+            z-index: 3;
+            box-shadow: 0 0 12px currentColor;
+        }
+
+        .h-stop:nth-child(1) .h-dot {
+            background: #7C3AED;
+            color: #7C3AED
+        }
+
+        .h-stop:nth-child(2) .h-dot {
+            background: #2DD4BF;
+            color: #2DD4BF
+        }
+
+        .h-stop:nth-child(3) .h-dot {
+            background: #22C55E;
+            color: #22C55E
+        }
+
+        .h-stop:nth-child(4) .h-dot {
+            background: #EAB308;
+            color: #EAB308
+        }
+
+        .h-stop:nth-child(5) .h-dot {
+            background: #F97316;
+            color: #F97316
+        }
+
+        .h-stop:nth-child(6) .h-dot {
+            background: #EC4899;
+            color: #EC4899
+        }
+
+        .h-stop:nth-child(7) .h-dot {
+            background: #A78BFA;
+            color: #A78BFA
+        }
+
+        /* Date label (below line) */
+        .h-date {
+            font-size: .72rem;
+            font-weight: 700;
+            letter-spacing: .06em;
+            margin-top: 10px;
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        .h-stop:nth-child(1) .h-date {
+            color: #7C3AED
+        }
+
+        .h-stop:nth-child(2) .h-date {
+            color: #2DD4BF
+        }
+
+        .h-stop:nth-child(3) .h-date {
+            color: #22C55E
+        }
+
+        .h-stop:nth-child(4) .h-date {
+            color: #EAB308
+        }
+
+        .h-stop:nth-child(5) .h-date {
+            color: #F97316
+        }
+
+        .h-stop:nth-child(6) .h-date {
+            color: #EC4899
+        }
+
+        .h-stop:nth-child(7) .h-date {
+            color: #A78BFA
+        }
+
+        /* scroll hint badge */
+        .timeline-scroll-hint {
+            display: none;
+            text-align: center;
+            margin-top: 1rem;
+            font-size: .72rem;
+            color: var(--muted);
+            font-weight: 500;
+            letter-spacing: .08em;
+            gap: .4rem;
             align-items: center;
             justify-content: center;
-            font-family: 'Anton', sans-serif;
-            font-size: .8rem;
-            color: white;
-            box-shadow: 0 0 22px rgba(232, 130, 180, .5), 0 0 44px rgba(232, 130, 180, .2);
-            transition: transform .3s, box-shadow .3s
-        }
-
-        .timeline-node:hover {
-            transform: translateX(-50%) scale(1.2);
-            box-shadow: 0 0 32px rgba(232, 130, 180, .75)
-        }
-
-        .timeline-content {
-            width: calc(50% - 50px);
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 1.6rem;
-            transition: border-color .35s, transform .35s, box-shadow .35s;
-            position: relative
-        }
-
-        .timeline-item:nth-child(odd) .timeline-content {
-            margin-right: auto
-        }
-
-        .timeline-item:nth-child(even) .timeline-content {
-            margin-left: auto
-        }
-
-        .timeline-content:hover {
-            border-color: rgba(232, 130, 180, .45);
-            transform: scale(1.02);
-            box-shadow: 0 12px 32px rgba(0, 0, 0, .3)
-        }
-
-        .timeline-phase {
-            font-size: .62rem;
-            font-weight: 700;
-            letter-spacing: .2em;
-            text-transform: uppercase;
-            color: var(--pink);
-            margin-bottom: .35rem
-        }
-
-        .timeline-name {
-            font-family: 'Anton', sans-serif;
-            font-size: 1rem;
-            color: white;
-            margin-bottom: .5rem;
-            letter-spacing: .01em;
-            display: flex;
-            align-items: center;
-            gap: .5rem
-        }
-
-        .timeline-name i {
-            color: var(--pink);
-            font-size: 1.1rem
-        }
-
-        .timeline-date {
-            font-size: .8rem;
-            color: var(--blue);
-            margin-bottom: .7rem;
-            font-style: italic;
-            display: flex;
-            align-items: center;
-            gap: .4rem
-        }
-
-        .timeline-date i {
-            font-style: normal
-        }
-
-        .timeline-desc {
-            font-size: .9rem;
-            color: var(--muted);
-            line-height: 1.7
-        }
-
-        .timeline-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: .45rem;
-            margin-top: .9rem
-        }
-
-        .tag {
-            font-size: .6rem;
-            font-weight: 700;
-            letter-spacing: .1em;
-            text-transform: uppercase;
-            background: rgba(232, 130, 180, .12);
-            border: 1px solid rgba(232, 130, 180, .3);
-            color: var(--pink-l);
-            padding: .22rem .6rem;
-            border-radius: 20px
-        }
-
-        .timeline-item:nth-child(even) .timeline-content::after {
-            content: '';
-            position: absolute;
-            right: -8px;
-            top: 50%;
-            transform: translateY(-50%);
-            border-left: 8px solid rgba(232, 130, 180, .25);
-            border-top: 8px solid transparent;
-            border-bottom: 8px solid transparent
-        }
-
-        .timeline-item:nth-child(odd) .timeline-content::after {
-            content: '';
-            position: absolute;
-            left: -8px;
-            top: 50%;
-            transform: translateY(-50%);
-            border-right: 8px solid rgba(232, 130, 180, .25);
-            border-top: 8px solid transparent;
-            border-bottom: 8px solid transparent
         }
 
         /* IMPACT */
@@ -1102,10 +1208,11 @@
         .impact-item-text {
             font-size: .93rem;
             color: var(--muted);
-            line-height: 1.4
+            line-height: 1.4;
+            font-weight: 400
         }
 
-        /* ─── INCENTIVES ────────────────────────────── */
+        /* INCENTIVES */
         #incentives {
             padding: 7rem 0
         }
@@ -1209,16 +1316,17 @@
             font-size: 1rem;
             letter-spacing: .04em;
             color: white;
-            margin-bottom: .75rem
+            margin-bottom: .75rem;
+            font-weight: 300;
         }
 
         .incentive-card p {
             font-size: .9rem;
             color: var(--muted);
-            line-height: 1.75
+            line-height: 1.75;
+            font-weight: 400
         }
 
-        /* special wide card for last item */
         .incentives-grid .incentive-card.wide {
             grid-column: span 2
         }
@@ -1229,7 +1337,7 @@
             }
         }
 
-        /* ─── RULES ──────────────────────────────────── */
+        /* RULES */
         #rules {
             padding: 7rem 0
         }
@@ -1274,8 +1382,8 @@
         }
 
         .rule-body h4 {
-            font-family: 'Anton', sans-serif;
             font-size: .95rem;
+            font-weight: 700;
             color: var(--blue-l);
             letter-spacing: .05em;
             margin-bottom: .4rem
@@ -1284,10 +1392,11 @@
         .rule-body p {
             font-size: .92rem;
             color: var(--muted);
-            line-height: 1.7
+            line-height: 1.7;
+            font-weight: 400
         }
 
-        /* ─── FAQ ────────────────────────────────────── */
+        /* FAQ */
         #faq {
             padding: 7rem 0
         }
@@ -1360,18 +1469,15 @@
         }
 
         .faq-answer-inner {
-            padding: 0 1.6rem 1.3rem;
+            padding: 1rem 1.6rem 1.3rem;
             font-size: .93rem;
             color: var(--muted);
             line-height: 1.8;
-            border-top: 1px solid var(--border)
+            border-top: 1px solid var(--border);
+            font-weight: 400
         }
 
-        .faq-answer-inner {
-            padding-top: 1rem
-        }
-
-        /* ─── TEAM ───────────────────────────────────── */
+        /* TEAM */
         #team {
             padding: 7rem 0
         }
@@ -1513,6 +1619,7 @@
             text-decoration: none;
             color: var(--muted);
             font-size: .87rem;
+            font-weight: 400;
             transition: background .25s, color .25s, transform .25s
         }
 
@@ -1584,7 +1691,8 @@
             font-size: 1.05rem;
             color: var(--muted);
             margin-bottom: 2.8rem;
-            line-height: 1.8
+            line-height: 1.8;
+            font-weight: 400
         }
 
         .cta-buttons {
@@ -1673,13 +1781,15 @@
             color: var(--muted);
             line-height: 1.7;
             margin-bottom: 1.2rem;
-            font-style: italic
+            font-style: italic;
+            font-weight: 400
         }
 
         .footer-contact {
             font-size: .85rem;
             color: var(--muted);
-            line-height: 1.8
+            line-height: 1.8;
+            font-weight: 400
         }
 
         .footer-contact a {
@@ -1707,7 +1817,8 @@
             font-size: .88rem;
             color: var(--muted);
             text-decoration: none;
-            transition: color .25s
+            transition: color .25s;
+            font-weight: 400
         }
 
         .footer-col ul li a:hover {
@@ -1818,30 +1929,12 @@
                 grid-template-columns: 1fr 1fr
             }
 
-            .timeline-spine {
-                left: 20px
-            }
-
-            .timeline-item {
-                flex-direction: row !important;
-                padding-left: 55px
-            }
-
-            .timeline-node {
-                left: 20px
-            }
-
-            .timeline-content {
-                width: 100%;
-                margin: 0 !important
-            }
-
-            .timeline-content::after {
-                display: none !important
-            }
-
             .team-card-wrap {
                 height: 340px
+            }
+
+            .timeline-scroll-hint {
+                display: flex
             }
         }
 
@@ -1917,6 +2010,14 @@
             .team-card-wrap {
                 height: 360px
             }
+
+            .h-card-title {
+                font-size: .85rem
+            }
+
+            .h-card-desc {
+                font-size: .72rem
+            }
         }
 
         @media(max-width:380px) {
@@ -1946,9 +2047,8 @@
                 <li><a href="#roadmap">Roadmap</a></li>
                 <li><a href="#incentives">Incentives</a></li>
                 <li><a href="#faq">FAQ</a></li>
-                <li><a href="#team">Team</a></li>
+                <li><a href="/signinas">Sign In / Login</a></li>
             </ul>
-            <a href="/signinas" class="nav-cta">Login / Signup</a>
             <button class="hamburger" id="hamburgerBtn" onclick="toggleMobile()" aria-label="Menu"
                 aria-expanded="false">
                 <span></span><span></span><span></span>
@@ -1958,14 +2058,11 @@
 
     <!-- MOBILE MENU -->
     <div class="mobile-menu" id="mobileMenu">
-        <a href="#vision" onclick="toggleMobile(false)">Vision</a>
-        <a href="#mission" onclick="toggleMobile(false)">Mission</a>
         <a href="#roadmap" onclick="toggleMobile(false)">Roadmap</a>
         <a href="#incentives" onclick="toggleMobile(false)">Incentives</a>
         <a href="#rules" onclick="toggleMobile(false)">Rules</a>
         <a href="#faq" onclick="toggleMobile(false)">FAQ</a>
-        <a href="#team" onclick="toggleMobile(false)">Team</a>
-        <a href="/signinas" onclick="toggleMobile(false)">Login / Signup</a>
+        <a href="/signinas" onclick="toggleMobile(false)">Sign In / Login</a>
     </div>
 
     <!-- HERO -->
@@ -2092,114 +2189,108 @@
 
     <div class="ornament-divider section-inner"><span class="ornament-icon">✦</span></div>
 
-    <!-- ROADMAP TIMELINE -->
+    <!-- ROADMAP — HORIZONTAL -->
     <section id="roadmap">
         <div class="section-inner">
             <div class="section-header fade-in">
                 <div class="eyebrow">The Voyage Map</div>
                 <h2 class="section-title">Program Roadmap</h2>
-                <p class="section-desc">Seven milestones across four phases — each one bringing students closer to
-                    entrepreneurial mastery.</p>
+                <p class="section-desc">Seven milestones — from registration to grand finale — each bringing students
+                    closer to entrepreneurial mastery.</p>
             </div>
-            <div class="timeline">
-                <div class="timeline-spine"></div>
 
-                <div class="timeline-item fade-in">
-                    <div class="timeline-node">1</div>
-                    <div class="timeline-content">
-                        <div class="timeline-phase">Phase 1 · Event 1</div>
-                        <div class="timeline-name"><i class="ri-anchor-line"></i> Genesis Bootcamp</div>
-                        <div class="timeline-date"><i class="ri-calendar-line"></i> 1st – 15th July</div>
-                        <div class="timeline-desc">The grand launch — students form cross-grade innovation squads,
-                            ignite their entrepreneurial mindset, and receive a real-world problem statement.</div>
-                        <div class="timeline-tags"><span class="tag">Mindset Activation</span><span class="tag">Team
-                                Formation</span><span class="tag">Challenge Brief</span></div>
-                    </div>
-                </div>
+            <div class="h-timeline-wrap fade-in">
+                <div class="h-timeline">
 
-                <div class="timeline-item fade-in">
-                    <div class="timeline-node">2</div>
-                    <div class="timeline-content">
-                        <div class="timeline-phase">Phase 1 · Event 2</div>
-                        <div class="timeline-name"><i class="ri-smartphone-line"></i> Social Media Challenge</div>
-                        <div class="timeline-date"><i class="ri-calendar-line"></i> Ongoing — Phase 1</div>
-                        <div class="timeline-desc">Teams build the school E-Cell's digital presence through creative
-                            challenges: Frame by Frame photos, Marketing Mania posters, and original social media
-                            challenges.</div>
-                        <div class="timeline-tags"><span class="tag">Frame by Frame</span><span class="tag">Marketing
-                                Mania</span><span class="tag">Creative Challenges</span></div>
+                    <!-- 1: Registration -->
+                    <div class="h-stop">
+                        <div class="h-card">
+                            <div class="h-card-title">Registration</div>
+                            <div class="h-card-desc">Registration starts for the NextGen Innovators Initiative Program.
+                                Schools enrol &amp; form their team.</div>
+                        </div>
+                        <div class="h-stem"></div>
+                        <div class="h-dot"></div>
+                        <div class="h-date">15<sup>th</sup> June –<br>15<sup>th</sup> Aug</div>
                     </div>
-                </div>
 
-                <div class="timeline-item fade-in">
-                    <div class="timeline-node">3</div>
-                    <div class="timeline-content">
-                        <div class="timeline-phase">Phase 2 · Event 1</div>
-                        <div class="timeline-name"><i class="ri-building-line"></i> Startup 101 Workshop</div>
-                        <div class="timeline-date"><i class="ri-calendar-line"></i> 15th – 31st August</div>
-                        <div class="timeline-desc">A full-day deep dive into entrepreneurship. Students learn to
-                            identify market gaps, brainstorm viable solutions, build resilience, and complete a one-page
-                            business model.</div>
-                        <div class="timeline-tags"><span class="tag">Problem Solving</span><span class="tag">Business
-                                Modelling</span><span class="tag">Resilience</span></div>
+                    <!-- 2: Genesis Bootcamp -->
+                    <div class="h-stop">
+                        <div class="h-card">
+                            <div class="h-card-title">Genesis Bootcamp</div>
+                            <div class="h-card-desc">Free one-day workshop and recruitment process for the
+                                entrepreneurship cell of the school.</div>
+                        </div>
+                        <div class="h-stem"></div>
+                        <div class="h-dot"></div>
+                        <div class="h-date">July End</div>
                     </div>
-                </div>
 
-                <div class="timeline-item fade-in">
-                    <div class="timeline-node">4</div>
-                    <div class="timeline-content">
-                        <div class="timeline-phase">Phase 2 · Event 2</div>
-                        <div class="timeline-name"><i class="ri-lightbulb-flash-line"></i> Idea Ignite: Junior</div>
-                        <div class="timeline-date"><i class="ri-calendar-line"></i> Mid September</div>
-                        <div class="timeline-desc">The school-level idea and project presentation competition. Top 5
-                            performers earn a coveted invitation to the grand Idea Ignite Junior stage at E-Summit GCOE
-                            Kolhapur.</div>
-                        <div class="timeline-tags"><span class="tag">Presentations</span><span class="tag">Top 5
-                                Qualify</span><span class="tag">E-Summit Entry</span></div>
+                    <!-- 3: Startup 101 -->
+                    <div class="h-stop">
+                        <div class="h-card">
+                            <div class="h-card-title">Startup 101</div>
+                            <div class="h-card-desc">One-day workshop to clear the concepts of entrepreneurship and
+                                build a one-page business model.</div>
+                        </div>
+                        <div class="h-stem"></div>
+                        <div class="h-dot"></div>
+                        <div class="h-date">15<sup>th</sup> – 31<sup>st</sup> Aug</div>
                     </div>
-                </div>
 
-                <div class="timeline-item fade-in">
-                    <div class="timeline-node">5</div>
-                    <div class="timeline-content">
-                        <div class="timeline-phase">Phase 3 · Event 0</div>
-                        <div class="timeline-name"><i class="ri-bank-line"></i> Field Visit at E-Cell GCOEK</div>
-                        <div class="timeline-date"><i class="ri-calendar-line"></i> Diwali Vacation</div>
-                        <div class="timeline-desc">A free-of-cost field visit to E-Cell GCOE Kolhapur — students
-                            experience a professional entrepreneurship ecosystem first-hand.</div>
-                        <div class="timeline-tags"><span class="tag">Professional Exposure</span><span
-                                class="tag">Optional</span><span class="tag">Free of Cost</span></div>
+                    <!-- 4: Idea Ignite Junior -->
+                    <div class="h-stop">
+                        <div class="h-card">
+                            <div class="h-card-title">Idea Ignite: Junior</div>
+                            <div class="h-card-desc">Idea &amp; Project presentation competition. Top 5 qualify for the
+                                E-Summit GCOE stage.</div>
+                        </div>
+                        <div class="h-stem"></div>
+                        <div class="h-dot"></div>
+                        <div class="h-date">1<sup>st</sup> – 20<sup>th</sup> Sept</div>
                     </div>
-                </div>
 
-                <div class="timeline-item fade-in">
-                    <div class="timeline-node">6</div>
-                    <div class="timeline-content">
-                        <div class="timeline-phase">Phase 3 · Event 1</div>
-                        <div class="timeline-name"><i class="ri-map-2-line"></i> Crossroads: What Next?</div>
-                        <div class="timeline-date"><i class="ri-calendar-line"></i> After Diwali Vacation</div>
-                        <div class="timeline-desc">A pivotal career guidance session bridging school ambitions with
-                            post-secondary reality. Experts help students navigate confusions around higher studies and
-                            stream selection.</div>
-                        <div class="timeline-tags"><span class="tag">Career Guidance</span><span class="tag">Higher
-                                Studies</span><span class="tag">Stream Selection</span></div>
+                    <!-- 5: Field Visit -->
+                    <div class="h-stop">
+                        <div class="h-card">
+                            <div class="h-card-title">Field Visit at E-Cell GCOE</div>
+                            <div class="h-card-desc">Optional field visit to E-Cell GCOE Kolhapur, scheduled during
+                                Diwali holidays. Free of cost.</div>
+                        </div>
+                        <div class="h-stem"></div>
+                        <div class="h-dot"></div>
+                        <div class="h-date">Diwali<br>Vacations</div>
                     </div>
-                </div>
 
-                <div class="timeline-item fade-in">
-                    <div class="timeline-node">7</div>
-                    <div class="timeline-content">
-                        <div class="timeline-phase">Phase 3 · Event 2</div>
-                        <div class="timeline-name"><i class="ri-bar-chart-grouped-line"></i> Case Study &amp;
-                            Presentation</div>
-                        <div class="timeline-date"><i class="ri-calendar-line"></i> Late December</div>
-                        <div class="timeline-desc">Students receive a real problem statement, apply critical thinking to
-                            solve it, and present their solution — testing communication, analytical, and presentation
-                            skills.</div>
-                        <div class="timeline-tags"><span class="tag">Critical Thinking</span><span class="tag">Case
-                                Study</span><span class="tag">Presentation Skills</span></div>
+                    <!-- 6: Crossroads -->
+                    <div class="h-stop">
+                        <div class="h-card">
+                            <div class="h-card-title">Crossroads: What Next?</div>
+                            <div class="h-card-desc">A career guidance session for a brighter future — stream selection
+                                &amp; higher studies clarity.</div>
+                        </div>
+                        <div class="h-stem"></div>
+                        <div class="h-dot"></div>
+                        <div class="h-date">Nov End</div>
                     </div>
+
+                    <!-- 7: Case Study -->
+                    <div class="h-stop">
+                        <div class="h-card">
+                            <div class="h-card-title">Case Study &amp; Presentation</div>
+                            <div class="h-card-desc">Task to test critical thinking skills and presentation skills
+                                through a real problem statement.</div>
+                        </div>
+                        <div class="h-stem"></div>
+                        <div class="h-dot"></div>
+                        <div class="h-date">Dec End</div>
+                    </div>
+
                 </div>
+            </div>
+
+            <div class="timeline-scroll-hint">
+                <i class="ri-drag-move-line"></i>&nbsp; Scroll horizontally to see all milestones
             </div>
         </div>
     </section>
@@ -2327,7 +2418,7 @@
 
     <div class="ornament-divider section-inner"><span class="ornament-icon">✦</span></div>
 
-    <!-- RULES & GUIDELINES -->
+    <!-- RULES -->
     <section id="rules">
         <div class="section-inner">
             <div class="section-header fade-in">
@@ -2385,7 +2476,6 @@
                     voyage.</p>
             </div>
             <div class="faq-list fade-in">
-
                 <div class="faq-item">
                     <div class="faq-question" onclick="toggleFaq(this)">
                         <span class="faq-question-text">Can a school have more than one registration?</span>
@@ -2396,7 +2486,6 @@
                             for NextGen Innovators 2026.</div>
                     </div>
                 </div>
-
                 <div class="faq-item">
                     <div class="faq-question" onclick="toggleFaq(this)">
                         <span class="faq-question-text">Is there any registration fee?</span>
@@ -2407,7 +2496,6 @@
                             for all participating schools and students.</div>
                     </div>
                 </div>
-
                 <div class="faq-item">
                     <div class="faq-question" onclick="toggleFaq(this)">
                         <span class="faq-question-text">I am a student and want this program to run in my school. What
@@ -2420,7 +2508,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="faq-item">
                     <div class="faq-question" onclick="toggleFaq(this)">
                         <span class="faq-question-text">What are the prerequisites?</span>
@@ -2431,7 +2518,6 @@
                             is curiosity and a desire to innovate.</div>
                     </div>
                 </div>
-
                 <div class="faq-item">
                     <div class="faq-question" onclick="toggleFaq(this)">
                         <span class="faq-question-text">Who can participate?</span>
@@ -2442,7 +2528,6 @@
                             restrictions on school board, location, or size.</div>
                     </div>
                 </div>
-
                 <div class="faq-item">
                     <div class="faq-question" onclick="toggleFaq(this)">
                         <span class="faq-question-text">I want to participate in NextGen Innovators. What steps do I
@@ -2450,14 +2535,12 @@
                         <span class="faq-toggle"><i class="ri-add-line"></i></span>
                     </div>
                     <div class="faq-answer">
-                        <div class="faq-answer-inner">Register on the website of NextGen Innovators. You will have to
-                            provide the details of your school and the 2 teachers who will be our point of contact. You
-                            will receive a confirmation mail. In case of any discrepancy, reach out to us at the contact
-                            details below. After confirming, you can proceed to the dashboard. The dashboard and phase
-                            will be live after the registration deadline.</div>
+                        <div class="faq-answer-inner">Register on the website of NextGen Innovators. Provide the details
+                            of your school and 2 teachers as points of contact. You will receive a confirmation mail.
+                            After confirming, proceed to the dashboard — it goes live after the registration deadline.
+                        </div>
                     </div>
                 </div>
-
                 <div class="faq-item">
                     <div class="faq-question" onclick="toggleFaq(this)">
                         <span class="faq-question-text">I am a principal and want to register for NextGen Innovators.
@@ -2466,12 +2549,10 @@
                     </div>
                     <div class="faq-answer">
                         <div class="faq-answer-inner">Register your school through the Registration tab on the website.
-                            During the registration process, you will be required to provide the details of 1 to 2
-                            teacher representatives who will serve as the primary points of contact for the program.
-                        </div>
+                            During the process, provide the details of 1–2 teacher representatives who will serve as the
+                            primary points of contact.</div>
                     </div>
                 </div>
-
             </div>
         </div>
     </section>
@@ -2486,15 +2567,11 @@
                 <h2 class="section-title">Meet the Team</h2>
                 <p class="section-desc">The people behind NextGen Innovators — hover over a card to connect with us.</p>
             </div>
-
             <div class="team-grid">
-
-                <!-- Card 1: Shubham Paul -->
                 <div class="team-card-wrap fade-in">
                     <div class="team-card">
                         <div class="team-front">
-                            <div class="team-front-img">
-                                <img src="/team/shubham.jpg" alt="Shubham Paul"
+                            <div class="team-front-img"><img src="/team/shubham.jpg" alt="Shubham Paul"
                                     onerror="this.src='https://ui-avatars.com/api/?name=Shubham+Paul&background=F4845F&color=fff&size=400'">
                             </div>
                             <div class="team-front-info">
@@ -2507,30 +2584,21 @@
                             <div class="team-back-name">Shubham Paul</div>
                             <div class="team-back-divider"></div>
                             <div class="team-back-links">
-                                <a href="mailto:shubhampaul@ecell.in" class="team-back-link">
-                                    <i class="ri-mail-line"></i>
-                                    <span>shubhampaul@ecell.in</span>
-                                </a>
-                                <a href="tel:+917488466128" class="team-back-link">
-                                    <i class="ri-phone-line"></i>
-                                    <span>+91 74884 66128</span>
-                                </a>
+                                <a href="mailto:shubhampaul@ecell.in" class="team-back-link"><i
+                                        class="ri-mail-line"></i><span>shubhampaul@ecell.in</span></a>
+                                <a href="tel:+917488466128" class="team-back-link"><i
+                                        class="ri-phone-line"></i><span>+91 74884 66128</span></a>
                                 <a href="https://linkedin.com/in/shubhampaul" target="_blank" rel="noopener"
-                                    class="team-back-link linkedin-link">
-                                    <i class="ri-linkedin-box-fill"></i>
-                                    <span>Let's Connect</span>
-                                </a>
+                                    class="team-back-link linkedin-link"><i class="ri-linkedin-box-fill"></i><span>Let's
+                                        Connect</span></a>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <!-- Card 2: Snehal Shejul -->
                 <div class="team-card-wrap fade-in" style="transition-delay:.15s">
                     <div class="team-card">
                         <div class="team-front">
-                            <div class="team-front-img">
-                                <img src="/team/snehal.jpg" alt="Snehal Shejul"
+                            <div class="team-front-img"><img src="/team/snehal.jpg" alt="Snehal Shejul"
                                     onerror="this.src='https://ui-avatars.com/api/?name=Snehal+Shejul&background=E882B4&color=fff&size=400'">
                             </div>
                             <div class="team-front-info">
@@ -2543,26 +2611,19 @@
                             <div class="team-back-name">Snehal Shejul</div>
                             <div class="team-back-divider"></div>
                             <div class="team-back-links">
-                                <a href="mailto:snehalshejul@ecell.in" class="team-back-link">
-                                    <i class="ri-mail-line"></i>
-                                    <span>snehalshejul@ecell.in</span>
-                                </a>
+                                <a href="mailto:snehalshejul@ecell.in" class="team-back-link"><i
+                                        class="ri-mail-line"></i><span>snehalshejul@ecell.in</span></a>
                                 <a href="https://linkedin.com/in/snehalshejul" target="_blank" rel="noopener"
-                                    class="team-back-link linkedin-link">
-                                    <i class="ri-linkedin-box-fill"></i>
-                                    <span>Let's Connect</span>
-                                </a>
+                                    class="team-back-link linkedin-link"><i class="ri-linkedin-box-fill"></i><span>Let's
+                                        Connect</span></a>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <!-- Card 3: Vaibhav Mathur -->
                 <div class="team-card-wrap fade-in" style="transition-delay:.3s">
                     <div class="team-card">
                         <div class="team-front">
-                            <div class="team-front-img">
-                                <img src="/team/vaibhav.jpg" alt="Vaibhav Mathur"
+                            <div class="team-front-img"><img src="/team/vaibhav.jpg" alt="Vaibhav Mathur"
                                     onerror="this.src='https://ui-avatars.com/api/?name=Vaibhav+Mathur&background=6EB5FF&color=fff&size=400'">
                             </div>
                             <div class="team-front-info">
@@ -2575,26 +2636,18 @@
                             <div class="team-back-name">Vaibhav Mathur</div>
                             <div class="team-back-divider"></div>
                             <div class="team-back-links">
-                                <a href="mailto:vaibhavmathur@ecell.in" class="team-back-link">
-                                    <i class="ri-mail-line"></i>
-                                    <span>vaibhavmathur@ecell.in</span>
-                                </a>
+                                <a href="mailto:vaibhavmathur@ecell.in" class="team-back-link"><i
+                                        class="ri-mail-line"></i><span>vaibhavmathur@ecell.in</span></a>
                                 <a href="https://linkedin.com/in/vaibhavmathur" target="_blank" rel="noopener"
-                                    class="team-back-link linkedin-link">
-                                    <i class="ri-linkedin-box-fill"></i>
-                                    <span>Let's Connect</span>
-                                </a>
+                                    class="team-back-link linkedin-link"><i class="ri-linkedin-box-fill"></i><span>Let's
+                                        Connect</span></a>
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
-
-            <p class="team-hint fade-in" style="transition-delay:.4s">
-                <i class="ri-loop-left-line"></i>
-                Hover over a card to flip and see contact details
-            </p>
+            <p class="team-hint fade-in" style="transition-delay:.4s"><i class="ri-loop-left-line"></i> Hover over a
+                card to flip and see contact details</p>
         </div>
     </section>
 
@@ -2671,12 +2724,12 @@
     </footer>
 
     <script>
-        /* ── TOONHUB CAROUSEL ──────────────────────── */
+        /* ── CAROUSEL ──────────────────────────────── */
         const IMAGES = [{ src: "/characters/1.png", bg: "#F4845F" }, { src: "/characters/2.png", bg: "#6BBF7A" }, { src: "/characters/3.png", bg: "#E882B4" }, { src: "/characters/4.png", bg: "#6EB5FF" }];
         IMAGES.forEach(x => { const i = new Image(); i.src = x.src });
         let activeIndex = 0, animating = false;
         const heroEl = document.getElementById("hero"), carouselEl = document.getElementById("carousel"), rootEl = document.documentElement;
-        function hexToRgb(hex) { const clean = hex.replace("#", ""); const bigint = parseInt(clean, 16); return `${(bigint >> 16) & 255}, ${(bigint >> 8) & 255}, ${bigint & 255}` }
+        function hexToRgb(hex) { const c = hex.replace("#", ""); const b = parseInt(c, 16); return `${(b >> 16) & 255}, ${(b >> 8) & 255}, ${b & 255}` }
         function setThemeColor(hex) { rootEl.style.setProperty("--hero-accent", hex); rootEl.style.setProperty("--hero-accent-rgb", hexToRgb(hex)) }
         function isMobile() { return window.innerWidth < 640 }
         function render() {

@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.9.0/fonts/remixicon.css" rel="stylesheet" />
     <style>
         :root {
             --orange: #F4845F;
@@ -142,12 +143,12 @@
 </head>
 <body>
     <div class="card">
-        <div class="logo">🎒</div>
+        <div class="logo"><i class="ri-user-line"></i></div>
         <div class="title">Student Registration</div>
         <div class="sub">Young Innovator Enrollment Portal</div>
         <form action="/studentregister" method="POST">
             <div class="section">
-                <div class="section-title">👤 Personal Details</div>
+                <div class="section-title"><i class="ri-user-line"></i> Personal Details</div>
                 <div class="grid3">
                     <div class="group"><label>First Name</label><input type="text" name="firstName" required></div>
                     <div class="group"><label>Middle Name</label><input type="text" name="middleName"></div>
@@ -156,18 +157,17 @@
                 <div class="grid3">
                     <div class="group"><label>Date Of Birth</label><input type="date" name="dob" required></div>
                     <div class="group"><label>Gender</label><select name="gender"><option>Male</option><option>Female</option><option>Other</option></select></div>
-                    <div class="group"><label>Blood Group</label><select name="bloodGroup"><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option>O+</option><option>O-</option></select></div>
                 </div>
             </div>
             <div class="section">
-                <div class="section-title">📞 Contact Details</div>
+                <div class="section-title"><i class="ri-phone-line"></i> Contact Details</div>
                 <div class="grid2">
                     <div class="group"><label>Student Email</label><input type="email" name="studentEmail" required></div>
                     <div class="group"><label>Student Phone</label><input type="text" name="studentPhone" required></div>
                 </div>
             </div>
             <div class="section">
-                <div class="section-title">🏫 School Details</div>
+                <div class="section-title"><i class="ri-school-line"></i> School Details</div>>
                 <div class="grid2"><div class="group"><label>School Name</label><input type="text" name="schoolName" required></div></div>
                 <div class="grid3">
                     <div class="group"><label>Current Class</label><input type="text" name="currentClass" required></div>
@@ -180,18 +180,16 @@
                 </div>
             </div>
             <div class="section">
-                <div class="section-title">🚀 Innovation Profile</div>
-                <div class="group"><label>Interest Area</label><input type="text" name="interestArea"></div>
-                <div class="group"><label>Motivation</label><textarea name="motivation"></textarea></div>
+                <div class="section-title"><i class="ri-rocket-line"></i> Innovation Profile</div>
             </div>
             <div class="section">
-                <div class="section-title">🔒 Account Setup</div>
+                <div class="section-title"><i class="ri-lock-line"></i> Account Setup</div>
                 <div class="grid2">
                     <div class="group"><label>Password</label><input type="password" name="password" required></div>
                     <div class="group"><label>Confirm Password</label><input type="password" name="confirmPassword" required></div>
                 </div>
             </div>
-            <button class="btn">🚀 REGISTER STUDENT</button>
+            <button class="btn"><i class="ri-rocket-line"></i> REGISTER STUDENT</button>
         </form>
         <div class="footer">Already Registered? <a href="/studentlogin">Login →</a></div>
     </div>
